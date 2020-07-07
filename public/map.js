@@ -1,44 +1,5 @@
 // make a map
 
-// load the data
-document.addEventListener('DOMContentLoaded', function() {
-	const req = new XMLHttpRequest();
-	req.open('get', 'https://api.846policebrutality.com/api/incidents', true);
-
-	req.send();
-
-	req.onload = function() {
-		let json = JSON.parse(req.responseText);
-		let dataset = json.data;
-		//make copy for map
-		let mapData = dataset.map((d) => ({
-			city: `${d.city}, ${d.state}`,
-			lat: d.geocoding.lat,
-			long: d.geocoding.long
-		}));
-
-		//draw the circles
-		svg
-			.selectAll('myCircles')
-			.data(mapData)
-			.enter()
-			.append('circle')
-			.attr('cx', function(d) {
-				return projection([ d.long, d.lat ])[0];
-			})
-			.attr('cy', function(d) {
-				return projection([ d.long, d.lat ])[1];
-			})
-			.attr('r', 14)
-			.style('fill', '69b3a2')
-			.attr('stroke', '#69b3a2')
-			.attr('stroke-width', 3)
-			.attr('fill-opacity', 0.4);
-
-		//test
-		console.log(mapData);
-	};
-});
 
 // The select and define svg
 var svg = d3.select('svg'),
@@ -60,4 +21,55 @@ d3.json('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/w
 		.attr('fill', '#173977')
 		.attr('d', d3.geoPath().projection(projection))
 		.style('stroke', 'white');
+});
+
+// load the data
+document.addEventListener('DOMContentLoaded', function() {
+	const req = new XMLHttpRequest();
+	req.open('get', 'https://api.846policebrutality.com/api/incidents', true);
+
+	req.send();
+
+	req.onload = function() {
+		let json = JSON.parse(req.responseText);
+		let dataset = json.data;
+		//make copy for map and define what keys to use
+		let mapData = dataset.map((d) => ({
+			city: `${d.city}, ${d.state}`,
+			lat: d.geocoding.lat,
+			long: d.geocoding.long
+        }));
+        //sort by city
+        mapData.sort((a, b) => {
+            return a.city > b.city ? 1 : -1;
+        });
+        //make new array to fill
+        var cityCount = [];
+        // loop through cities, tally and set size
+        for (let city of mapData) {
+            let last = cityCount[cityCount.length - 1];
+        copy = last && last.city === city.city ? last.count++ & last.size++ : cityCount.push({ city: `${city.city}`, lat: city.lat, long: city.long, count: 1, size: 12 })
+        }
+
+		//draw the circles
+		svg
+			.selectAll('myCircles')
+			.data(cityCount)
+			.enter()
+			.append('circle')
+			.attr('cx', function(d) {
+				return projection([ d.long, d.lat ])[0];
+			})
+			.attr('cy', function(d) {
+				return projection([ d.long, d.lat ])[1];
+			})
+			.attr('r', 14)
+			.style('fill', 'DC143C')
+			.attr('stroke', '#DC143C')
+			.attr('stroke-width', 1)
+			.attr('fill-opacity', 0.6);
+
+		//test
+		console.log(cityCount);
+	};
 });
