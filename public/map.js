@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			.attr('r', 14)
 			.style('fill', 'DC143C')
 			.attr('stroke', '#DC143C')
-			.attr('stroke-width', 1)
+			.attr('stroke-width', 2)
 			.attr('fill-opacity', 0.6);
 
 		//test
