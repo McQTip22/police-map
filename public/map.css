@@ -1,0 +1,23 @@
+body {
+	background-color: white;
+	font-family: 'Fira Sans Condensed', sans-serif;
+	color: #173977;
+	text-align: center;
+}
+
+
+
+.container {
+	display: flex;
+	justify-content: center;
+	height: 100%;
+	margin-top: 3rem;
+}
+
+
+
+
+
+
+
+
