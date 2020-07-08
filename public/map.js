@@ -51,9 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
         copy = last && last.city === city.city ? last.count++ & last.size++ : cityCount.push({ city: `${city.city}`, lat: city.lat, long: city.long, count: 1, size: 12 })
         }
 
+         // Add a scale for bubble size
+        var size = d3.scaleLinear()
+            .domain([1,100])  // What's in the data
+            .range([ 4, 50])
+
 		//draw the circles
 		svg
-			.selectAll('myCircles')
+			.selectAll('bubbles')
 			.data(cityCount)
 			.enter()
 			.append('circle')
@@ -63,11 +68,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			.attr('cy', function(d) {
 				return projection([ d.long, d.lat ])[1];
 			})
-			.attr('r', 14)
+			.attr('r', function(d) {
+                return size(d.size)
+            })
 			.style('fill', 'DC143C')
 			.attr('stroke', '#DC143C')
 			.attr('stroke-width', 2)
-			.attr('fill-opacity', 0.6);
+			.attr('fill-opacity', 0.8);
 
 		//test
 		console.log(cityCount);
