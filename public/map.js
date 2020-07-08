@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				return projection([ d.long, d.lat ])[1];
 			})
 			.attr('r', function(d) {
-                return size(d.size)
+                return size(d.size * 2)
             })
 			.style('fill', 'DC143C')
 			.attr('stroke', '#DC143C')
